@@ -1,6 +1,3 @@
-class Schedule:
-    def __init__(self):
-        self.schedules = {}
 class Reservation:
     def __init__(self, client_name, transport, ticket, schedule=None):
         self.client_name = client_name
@@ -26,19 +23,6 @@ class Transport:
             return True
         return False
 
-    def delete_seat(self):
-        if self.available_seats < self.capacity:
-            self.available_seats += 1 #увеличиваем при удалении доступные места
-            return True
-        return False
-class Reservation:
-    def __init__(self, client_name, transport, ticket, schedule=None):
-        self.client_name = client_name
-        self.transport = transport
-        self.ticket = ticket
-        self.schedule = schedule
-
-
 class Client:
     def __init__(self, name):
         self.name = name
@@ -47,16 +31,16 @@ class Client:
 class TransportManager:
     def __init__(self):
         self.transports = []
-        self.schedule = Schedule()
+
 class TicketManager:
     def __init__(self):
         self.tickets = []
     def create_ticket(self, client_name, transport, schedule):
         ticket = Ticket(client_name, transport, schedule)
         return ticket
-
     def add_ticket(self, ticket):
         self.tickets.append(ticket)
+
 class ReservationManager:
     def __init__(self):
         self.reservations = []
@@ -70,6 +54,17 @@ class Notification:
     def __init__(self):
         self.notifications = []
 
+    def send_notification(self, client_name, message):
+        notification = f"Уведомление для {client_name}: {message}"
+        self.notifications.append(notification)
+        print(notification)
+
+    def show_notifications(self):
+        if not self.notifications:
+            print("Нет уведомлений.")
+        else:
+            for notification in self.notifications:
+                print(notification)
 class BookingSystem:
     def __init__(self):
         self.transports = []
@@ -105,11 +100,21 @@ class BookingSystem:
         if not transport.book_seat():
             print(f"Нет свободных мест на {transport_type}.")
             return
+        schedule = None
+        for dep, arr in transport.schedule:
+            if dep == departure_time:
+                schedule = (dep, arr)
+                break
+
+        if schedule is None:
+            print(f"Нет доступных рейсов на {departure_time}.")
+            return
         ticket = self.ticket_manager.create_ticket(client.name, transport, schedule)
         self.ticket_manager.add_ticket(ticket)
 
         # Создаём бронирование
         reservation = self.reservation_manager.create_reservation(client.name, transport, ticket, schedule)
+        self.notification_manager.send_notification(client.name,f"Билет на {transport_type} успешно куплен. Время отправления: {departure_time}")
 
 
 def menu():
@@ -126,4 +131,6 @@ def menu():
     transport_type = input("Введите тип транспорта для покупки билета: ")
     departure_time = input("Выберите время отправления: ")
     system.book_ticket(client, transport_type, departure_time)
+
+    system.notification_manager.show_notifications()
 menu()
