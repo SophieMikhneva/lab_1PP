@@ -1,3 +1,13 @@
+import json
+
+def write_to_json(data, filename):
+    with open(filename, 'w', encoding='utf-8') as file:
+        json.dump(data, file, ensure_ascii=False, indent=4)
+
+def read_from_json(filename):
+    with open(filename, 'r', encoding='utf-8') as file:
+        return json.load(file)
+
 class Reservation:
     def __init__(self, client_name, transport, ticket, schedule=None):
         self.client_name = client_name
@@ -134,3 +144,16 @@ def menu():
 
     system.notification_manager.show_notifications()
 menu()
+data = {
+    "Transports": [
+        {"Type": "Автобус", "Capacity": 10, "Schedule": [{"Departure": "10:00", "Arrival": "12:00"}, {"Departure": "14:00", "Arrival": "16:00"}]},
+        {"Type": "Поезд", "Capacity": 50, "Schedule": [{"Departure": "15:00", "Arrival": "18:00"}, {"Departure": "19:00", "Arrival": "22:00"}]}
+    ],
+    "Clients": [
+        {"Name": "Соня"},
+        {"Name": "Лука"}
+    ]
+}
+write_to_json(data, 'data.json')
+json_data = read_from_json('data.json')
+print(json_data)
