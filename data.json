@@ -1,0 +1,40 @@
+{
+    "Transports": [
+        {
+            "Type": "Автобус",
+            "Capacity": 10,
+            "Schedule": [
+                {
+                    "Departure": "10:00",
+                    "Arrival": "12:00"
+                },
+                {
+                    "Departure": "14:00",
+                    "Arrival": "16:00"
+                }
+            ]
+        },
+        {
+            "Type": "Поезд",
+            "Capacity": 50,
+            "Schedule": [
+                {
+                    "Departure": "15:00",
+                    "Arrival": "18:00"
+                },
+                {
+                    "Departure": "19:00",
+                    "Arrival": "22:00"
+                }
+            ]
+        }
+    ],
+    "Clients": [
+        {
+            "Name": "Соня"
+        },
+        {
+            "Name": "Лука"
+        }
+    ]
+}
